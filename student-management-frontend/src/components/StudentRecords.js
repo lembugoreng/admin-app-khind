@@ -5,9 +5,11 @@ import axios from 'axios';
 const StudentRecords = () => {
   const [students, setStudents] = useState([]);
   const [newStudent, setNewStudent] = useState({ name: '', registration_no: '', contact: '' });
+  const [editMode, setEditMode] = useState(false); // Track if we're editing a student
+  const [studentToEdit, setStudentToEdit] = useState(null); // Track which student is being edited
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/students', { //get student data
+    axios.get('http://localhost:8000/api/students', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -18,22 +20,52 @@ const StudentRecords = () => {
 
   const handleAddStudent = async () => {
     try {
-      // console.log("Test see newStudent",newStudent);
       const response = await axios.post('http://localhost:8000/api/students', newStudent, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setStudents([...students, response.data]); // update the list with new student when we add them
+      setStudents([...students, response.data]);
       setNewStudent({ name: '', registration_no: '', contact: '' });
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleEditStudent = (student) => {
+    setNewStudent({ name: student.name, registration_no: student.registration_no, contact: student.contact });
+    setEditMode(true);
+    setStudentToEdit(student.id); // Store the id of the student to be edited
+  };
+
+  const handleUpdateStudent = async () => {
+    try {
+      const response = await axios.put(`http://localhost:8000/api/students/${studentToEdit}`, newStudent, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const updatedStudents = students.map(student =>
+        student.id === studentToEdit ? response.data : student
+      );
+      setStudents(updatedStudents);
+      setNewStudent({ name: '', registration_no: '', contact: '' });
+      setEditMode(false);
+      setStudentToEdit(null); // Reset the edit state
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewStudent({ name: '', registration_no: '', contact: '' });
+    setEditMode(false);
+    setStudentToEdit(null);
+  };
+
   const handleDeleteStudent = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/students/${id}`, { //delete student based on id passed
+      await axios.delete(`http://localhost:8000/api/students/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -50,7 +82,7 @@ const StudentRecords = () => {
       
       {/* Student Form */}
       <Box sx={{ mt: 4, p: 2, boxShadow: 2 }}>
-        <Typography variant="h6">Register New Student</Typography>
+        <Typography variant="h6">{editMode ? 'Update Student' : 'Register New Student'}</Typography>
         <TextField 
           label="Name" 
           value={newStudent.name} 
@@ -69,9 +101,20 @@ const StudentRecords = () => {
           onChange={(e) => setNewStudent({ ...newStudent, contact: e.target.value })} 
           fullWidth margin="normal" 
         />
-        <Button variant="contained" color="primary" fullWidth onClick={handleAddStudent}>
-          Add Student
-        </Button>
+        {editMode ? (
+          <>
+            <Button variant="contained" color="primary" fullWidth onClick={handleUpdateStudent} sx={{ mb: 1 }}>
+              Update Student
+            </Button>
+            <Button variant="outlined" color="secondary" fullWidth onClick={handleCancelEdit}>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <Button variant="contained" color="primary" fullWidth onClick={handleAddStudent}>
+            Add Student
+          </Button>
+        )}
       </Box>
 
       {/* Student List */}
@@ -92,10 +135,12 @@ const StudentRecords = () => {
                 <TableCell>{student.registration_no}</TableCell>
                 <TableCell>{student.contact}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteStudent(student.id)}>
+                  <Button variant="outlined" color="primary" onClick={() => handleEditStudent(student)}>
+                    Edit
+                  </Button>
+                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteStudent(student.id)} sx={{ ml: 1 }}>
                     Delete
                   </Button>
-                  {/* You can add an update functionality here */}
                 </TableCell>
               </TableRow>
             ))}
