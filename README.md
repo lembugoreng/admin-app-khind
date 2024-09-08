@@ -22,7 +22,7 @@ Make sure the following PHP extensions are enabled in your `php.ini` file:
 
 2. **Navigate to the backend directory:**
    
-   `cd admin-app-khind/backend`
+   `cd admin-app-khind/student-management-backend`
 
 3. **Install dependencies:**
    
@@ -76,7 +76,7 @@ Make sure the following PHP extensions are enabled in your `php.ini` file:
 
 1. **Navigate to the frontend directory:**
 
-    `cd admin-app-khind/frontend`
+    `cd admin-app-khind/student-management-frontend`
 
 2. **Install dependencies:**
 
