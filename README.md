@@ -51,24 +51,24 @@ Make sure the following PHP extensions are enabled in your `php.ini` file:
 
 7. **Create a new user:**
 
-Open an integrated terminal and run the following command:
+    Open an integrated terminal and run the following command:
 
-`php artisan tinker`
+    `php artisan tinker`
 
-Then paste the following code to create a new user:
+    Then paste the following code to create a new user:
 
-use App\Models\User;
+    use App\Models\User;
 
-$user = User::create([
-    'username' => 'newuser',
-    'password' => bcrypt('password123'),
-]);
+    $user = User::create([
+        'username' => 'newuser',
+        'password' => bcrypt('password123'),
+    ]);
 
 
 
 8. **Start the Laravel server:**
 
-`php artisan serve`
+    `php artisan serve`
 
 ---
 
@@ -76,16 +76,16 @@ $user = User::create([
 
 1. **Navigate to the frontend directory:**
 
-`cd admin-app-khind/frontend`
+    `cd admin-app-khind/frontend`
 
 2. **Install dependencies:**
 
-`npm install`
+    `npm install`
 
 3. **Start the React development server:**
 
-`npm start`
+    `npm start`
 
 ---
 
-Now you're all set! The backend will be running on `http://127.0.0.1:8000` and the frontend on `http://localhost:3000`.
+    Now you're all set! The backend will be running on `http://127.0.0.1:8000` and the frontend on `http://localhost:3000`.
