@@ -59,10 +59,10 @@ Then paste the following code to create a new user:
 
 use App\Models\User;
 
-$user = User::create([
+`$user = User::create([
     'username' => 'newuser',
     'password' => bcrypt('password123'),
-]);
+]);`
 
 
 
