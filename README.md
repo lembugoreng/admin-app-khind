@@ -43,11 +43,11 @@ Make sure the following PHP extensions are enabled in your `php.ini` file:
 
 5. **Generate application key:**
 
-`php artisan key:generate`
+    `php artisan key:generate`
 
 6. **Run database migrations:**
 
-`php artisan migrate`
+    `php artisan migrate`
 
 7. **Create a new user:**
 
